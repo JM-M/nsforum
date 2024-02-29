@@ -7,6 +7,9 @@ import { SiteHeader } from '@/components/site/site-header';
 import { TailwindIndicator } from '@/components/site/tailwind-indicator';
 import { ThemeProvider } from '@/components/site/theme-provider';
 
+import { Providers } from './providers';
+
+import '@orbisclub/components/dist/index.modern.css';
 import '@/styles/globals.css';
 
 import { Metadata, Viewport } from 'next';
@@ -18,7 +21,7 @@ export const metadata: Metadata = {
   },
   description: siteConfig.description,
   icons: {
-    icon: '/favicon.ico',
+    icon: '/favicon.png',
     shortcut: '/favicon-16x16.png',
     apple: '/apple-touch-icon.png',
   },
@@ -48,19 +51,21 @@ export default function RootLayout({ children }: RootLayoutProps) {
           )}
           suppressHydrationWarning
         >
-          <ThemeProvider attribute="class" defaultTheme="light">
-            <TooltipProvider
-              disableHoverableContent
-              delayDuration={500}
-              skipDelayDuration={0}
-            >
-              <div className="relative flex min-h-screen flex-col">
-                <SiteHeader />
-                <div className="flex-1">{children}</div>
-              </div>
-              <TailwindIndicator />
-            </TooltipProvider>
-          </ThemeProvider>
+          <Providers>
+            <ThemeProvider attribute="class" defaultTheme="light">
+              <TooltipProvider
+                disableHoverableContent
+                delayDuration={500}
+                skipDelayDuration={0}
+              >
+                <div className="relative flex min-h-screen flex-col">
+                  <SiteHeader />
+                  <div className="flex-1">{children}</div>
+                </div>
+                <TailwindIndicator />
+              </TooltipProvider>
+            </ThemeProvider>
+          </Providers>
         </body>
       </html>
     </>

@@ -1,13 +1,21 @@
 export type SiteConfig = typeof siteConfig;
 
 export const siteConfig = {
-  name: 'Next.js',
+  name: 'NSForum',
   description:
-    'Rich-text editor components built with Radix UI and Tailwind CSS.',
+    'A forum for people interested in network societies and related concepts',
   mainNav: [
     {
       title: 'Home',
       href: '/',
+    },
+    {
+      title: 'All posts',
+      href: '/posts',
+    },
+    {
+      title: 'Categories',
+      href: '/categories',
     },
   ],
   links: {

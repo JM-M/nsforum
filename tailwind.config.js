@@ -1,9 +1,13 @@
-const { fontFamily } = require('tailwindcss/defaultTheme');
-
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   darkMode: ['class'],
-  content: ['src/**/*.{ts,tsx}'],
+  content: [
+    './pages/**/*.{ts,tsx}',
+    './components/**/*.{ts,tsx}',
+    './app/**/*.{ts,tsx}',
+    './src/**/*.{ts,tsx}',
+  ],
+  prefix: '',
   theme: {
     container: {
       center: true,
@@ -49,14 +53,9 @@ module.exports = {
         },
       },
       borderRadius: {
-        xl: `calc(var(--radius) + 4px)`,
         lg: 'var(--radius)',
         md: 'calc(var(--radius) - 2px)',
         sm: 'calc(var(--radius) - 4px)',
-      },
-      fontFamily: {
-        sans: ['var(--font-sans)', ...fontFamily.sans],
-        heading: ['var(--font-heading)', ...fontFamily.sans],
       },
       keyframes: {
         'accordion-down': {
@@ -74,5 +73,30 @@ module.exports = {
       },
     },
   },
-  plugins: [require('tailwindcss-animate')],
+  // safelist: [
+  //   'mb-1',
+  //   'mt-[2em]',
+  //   'font-heading',
+  //   'text-4xl',
+  //   'font-bold',
+  //   'mb-px',
+  //   'mt-[1.4em]',
+  //   'text-2xl',
+  //   'font-semibold',
+  //   'tracking-tight',
+  //   'mt-[1em]',
+  //   'text-xl',
+  //   'mt-[0.75em]',
+  //   'text-lg',
+  //   'text-lg',
+  //   'text-base',
+  //   'ml-2',
+  //   'absolute',
+  //   'inset-x-0',
+  //   'h-0.5',
+  //   'opacity-100',
+  //   '-top-px',
+  //   '-bottom-px',
+  // ],
+  plugins: [require('tailwindcss-animate'), require('daisyui')],
 };
