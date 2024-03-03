@@ -14,6 +14,9 @@ import '@/styles/globals.css';
 
 import { Metadata, Viewport } from 'next';
 
+import { Navbar } from '@/components/site/Navbar';
+import Sidebar from '@/components/site/Sidebar';
+
 export const metadata: Metadata = {
   title: {
     default: siteConfig.name,
@@ -46,8 +49,8 @@ export default function RootLayout({ children }: RootLayoutProps) {
         <body
           className={cn(
             'min-h-screen bg-background font-sans antialiased',
-            '[&_.slate-selected]:!bg-primary/20 [&_.slate-selection-area]:border [&_.slate-selection-area]:border-primary [&_.slate-selection-area]:bg-primary/10',
-            fontSans.variable
+            '[&_.slate-selected]:!bg-primary/20 [&_.slate-selection-area]:border [&_.slate-selection-area]:border-primary [&_.slate-selection-area]:bg-primary/10'
+            // fontSans.variable
           )}
           suppressHydrationWarning
         >
@@ -58,9 +61,23 @@ export default function RootLayout({ children }: RootLayoutProps) {
                 delayDuration={500}
                 skipDelayDuration={0}
               >
-                <div className="relative flex min-h-screen flex-col">
+                {/* <div className="relative flex min-h-screen flex-col">
                   <SiteHeader />
                   <div className="flex-1">{children}</div>
+                </div> */}
+                <div className="drawer">
+                  <input
+                    id="my-drawer-3"
+                    type="checkbox"
+                    className="drawer-toggle"
+                  />
+                  <div className="drawer-content flex flex-col">
+                    {/* Navbar */}
+                    <Navbar items={siteConfig.navbar} />
+                    {/* Page content here */}
+                    <main className="p-3 md:p-5">{children}</main>
+                  </div>
+                  <Sidebar items={siteConfig.navbar} />
                 </div>
                 <TailwindIndicator />
               </TooltipProvider>

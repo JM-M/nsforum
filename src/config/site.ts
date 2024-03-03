@@ -1,10 +1,10 @@
 export type SiteConfig = typeof siteConfig;
 
 export const siteConfig = {
-  name: 'NSForum',
+  name: 'Network Society Forum',
   description:
     'A forum for people interested in network societies and related concepts',
-  mainNav: [
+  navbar: [
     {
       title: 'Home',
       href: '/',
@@ -12,10 +12,6 @@ export const siteConfig = {
     {
       title: 'All posts',
       href: '/posts',
-    },
-    {
-      title: 'Categories',
-      href: '/categories',
     },
   ],
   links: {

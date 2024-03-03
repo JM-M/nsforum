@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect, useRef } from 'react';
 import { withProps } from '@udecode/cn';
 import { createAlignPlugin } from '@udecode/plate-alignment';
 import { createAutoformatPlugin } from '@udecode/plate-autoformat';
@@ -45,6 +46,7 @@ import {
   Plate,
   PlateLeaf,
   RenderAfterEditable,
+  useEditorState,
 } from '@udecode/plate-common';
 import { createDndPlugin } from '@udecode/plate-dnd';
 import { createEmojiPlugin } from '@udecode/plate-emoji';
@@ -192,10 +194,7 @@ const plugins = createPlugins(
     createAlignPlugin({
       inject: {
         props: {
-          validTypes: [
-            ELEMENT_PARAGRAPH,
-            // ELEMENT_H1, ELEMENT_H2, ELEMENT_H3
-          ],
+          validTypes: [ELEMENT_PARAGRAPH, ELEMENT_H1, ELEMENT_H2, ELEMENT_H3],
         },
       },
     }),
@@ -353,11 +352,24 @@ const plugins = createPlugins(
   }
 );
 
+// This components returns the editor object to the parent component
+const Init = ({ getEditor: _getEditor }: { getEditor: (_: any) => void }) => {
+  const editor = useEditorState();
+  const getEditor = useRef(_getEditor).current; // memoise to prevent unnecessary renrenders
+  useEffect(() => {
+    getEditor(editor);
+  }, [getEditor]);
+  return null;
+};
+
 type Props = {
   initialValue?: any[];
   placeholder?: string;
   fixedToolbar?: boolean;
   floatingToolbar?: boolean;
+  editorClassName?: string;
+  handleChange?: (value: any[]) => void;
+  getEditor?: (_: any) => void;
 };
 
 export function PlateEditor({
@@ -371,19 +383,25 @@ export function PlateEditor({
   placeholder = '',
   fixedToolbar = true,
   floatingToolbar = true,
+  editorClassName = '',
+  handleChange = () => null,
+  getEditor = () => null,
 }: Props) {
   return (
     <DndProvider backend={HTML5Backend}>
       <CommentsProvider users={{}} myUserId="1">
-        <Plate plugins={plugins} initialValue={initialValue}>
+        <Plate
+          plugins={plugins}
+          initialValue={initialValue}
+          onChange={handleChange}
+        >
           {fixedToolbar && (
             <FixedToolbar>
               <FixedToolbarButtons />
             </FixedToolbar>
           )}
-
-          <Editor placeholder={placeholder} />
-
+          <Init getEditor={getEditor} />
+          <Editor placeholder={placeholder} className={editorClassName} />
           {floatingToolbar && (
             <FloatingToolbar>
               <FloatingToolbarButtons />
