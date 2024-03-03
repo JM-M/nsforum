@@ -1,9 +1,12 @@
 - [x] Remove H1 from editor
-- [ ] Nested comment replies
-- [ ] Delete comments
+- [x] Nested comment replies
+- [x] Delete comments
+- [ ] Delete comment replies when comment is deleted
 - [ ] Edit posts
 - [ ] Delete posts
+- [ ] Delete comments when a post is deleted
 - [ ] Check for and throw errors in useQuery and useMutation functions
+- [ ] Use staleTime in queries
 - [ ] Make slate-remark plateNodeTypes match the documentation, underline and strikethrough currently not working
 - [ ] Replace instances of 'postComments' with 'comments'
 <!-- ideas -->

@@ -7,12 +7,47 @@ import { MoreVertical, Pencil, Trash2 } from 'lucide-react';
 
 import usePostComments from '@/hooks/usePostComments';
 
+import { closeModal, openModal } from '../../utils';
 import CommentsToc from './CommentsToc';
 import CreateComment from './CreateComment';
 import EditComment from './EditComment';
+import Modal from './Modal';
 
-type CommentActionsProps = { edit: Function };
-const CommentActions = ({ edit }: CommentActionsProps) => {
+type CommentDeleteModalProps = { stream_id: string; post_id: string };
+const CommentDeleteModal = ({
+  stream_id,
+  post_id,
+}: CommentDeleteModalProps) => {
+  const { deletePostCommentMutation } = usePostComments({ post_id });
+  const modalId = `delete-comment-modal-${stream_id}`;
+  const deletePostComment = async () => {
+    await deletePostCommentMutation.mutateAsync(stream_id);
+    closeModal(modalId);
+  };
+
+  return (
+    <Modal id={modalId}>
+      <p className="font-medium text-lg">
+        Are you sure you want to delete this comment?
+      </p>
+      <div className="mt-5 flex justify-end items-center">
+        <button
+          className="btn btn-neutral"
+          onClick={deletePostComment}
+          disabled={deletePostCommentMutation.isPending}
+        >
+          {deletePostCommentMutation.isPending && (
+            <span className="loading loading-spinner w-5"></span>
+          )}
+          Delete
+        </button>
+      </div>
+    </Modal>
+  );
+};
+
+type CommentActionsProps = { edit: Function; stream_id: string };
+const CommentActions = ({ edit, stream_id }: CommentActionsProps) => {
   return (
     <div className="dropdown dropdown-end">
       <div tabIndex={0} role="button">
@@ -36,7 +71,10 @@ const CommentActions = ({ edit }: CommentActionsProps) => {
           </span>
         </li>
         <li>
-          <span className="w-full flex gap-3 items-center">
+          <span
+            className="w-full flex gap-3 items-center"
+            onClick={() => openModal(`delete-comment-modal-${stream_id}`)}
+          >
             <Trash2 strokeWidth={1.4} size={16} />
             <span>Delete</span>
           </span>
@@ -63,6 +101,7 @@ const Comment = ({ comment, post_id, level = 0 }: CommentProps) => {
 
   return (
     <div>
+      <CommentDeleteModal stream_id={stream_id} post_id={post_id} />
       {showCommentEditor ? (
         <EditComment
           post_id={post_id}
@@ -78,7 +117,10 @@ const Comment = ({ comment, post_id, level = 0 }: CommentProps) => {
               {creator_details?.profile?.username || ''}
             </span>
             {user?.did && user?.did === creator_details?.did && (
-              <CommentActions edit={() => setShowCommentEditor(true)} />
+              <CommentActions
+                edit={() => setShowCommentEditor(true)}
+                stream_id={stream_id}
+              />
             )}
           </div>
           <div className="prose text-foreground leading-5 text-sm">
@@ -166,6 +208,7 @@ const PostComments = ({ post_id, comments: _comments = [], title }: Props) => {
   const commenters = postComments.map(
     (comment: any) => comment?.creator_details?.profile?.username
   );
+
   return (
     <div className="relative flex gap-3">
       <CommentsToc title={title} commenters={commenters} />

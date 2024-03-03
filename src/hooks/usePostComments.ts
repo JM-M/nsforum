@@ -15,7 +15,7 @@ type Props = {
 
 const usePostComments = (props?: Props) => {
   const { post_id, initialData } = props || {};
-  const { orbis } = useOrbis();
+  const { orbis, user } = useOrbis();
 
   const queryClient = useQueryClient();
 
@@ -68,10 +68,11 @@ const usePostComments = (props?: Props) => {
       return {
         stream_id: res.doc,
         content: { body, master },
+        creator_details: { profile: user.profile },
         reply_to,
       };
     } else {
-      throw new Error(res.error || 'An error occured while fetching comments');
+      throw new Error(res.error || 'An error occured while creating comments');
     }
   };
 
@@ -111,7 +112,7 @@ const usePostComments = (props?: Props) => {
         content: { body },
       };
     } else {
-      throw new Error(res.error || 'An error occured while fetching comments');
+      throw new Error(res.error || 'An error occured while editing comments');
     }
   };
 
@@ -132,6 +133,7 @@ const usePostComments = (props?: Props) => {
               pages.push(
                 page.map((comment: any) => {
                   if (comment.stream_id === newPostComment.stream_id) {
+                    updatedComment = true;
                     return {
                       ...comment,
                       content: {
@@ -149,8 +151,56 @@ const usePostComments = (props?: Props) => {
             pages,
             pageParams: data.pageParams,
           };
-        } else {
-          newData = { pages: [newPostComment], pageParams: [0] };
+        }
+        return cloneDeep(newData);
+      });
+      setTimeout(() => {
+        queryClient.invalidateQueries({
+          queryKey: ['post-comments', { post_id }],
+        });
+      }, 2000); // it takes a bit for the posts to be saved.
+    },
+  });
+
+  const deletePostComment = async (stream_id: string) => {
+    const res = await orbis.deletePost(stream_id);
+    if (res.status === 200 && !res.error) {
+      // For optimistic update
+      return res.doc;
+    } else {
+      throw new Error(res.error || 'An error occured while deleting comment');
+    }
+  };
+
+  const deletePostCommentMutation = useMutation({
+    mutationKey: ['delete-comment'],
+    mutationFn: deletePostComment,
+    onSuccess: (stream_id) => {
+      queryClient.setQueryData(['post-comments', { post_id }], (data: any) => {
+        let newData;
+        if (data?.pages?.length) {
+          const pages: [][] = [];
+          let deletedComment: boolean = false;
+          for (let i = 0; i < data.pages.length; i++) {
+            const page = data.pages[i];
+            if (deletedComment) {
+              pages.push(page);
+            } else {
+              pages.push(
+                page.filter((comment: any) => {
+                  const match = comment.stream_id === stream_id;
+                  if (match) {
+                    deletedComment = true;
+                  }
+                  return !match;
+                })
+              );
+            }
+          }
+          newData = {
+            pages,
+            pageParams: data.pageParams,
+          };
         }
         return cloneDeep(newData);
       });
@@ -168,6 +218,7 @@ const usePostComments = (props?: Props) => {
     // getPostComments,
     createPostCommentMutation,
     editPostCommentMutation,
+    deletePostCommentMutation,
   };
 };
 

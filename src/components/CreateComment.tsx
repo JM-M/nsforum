@@ -56,13 +56,13 @@ const CreateComment = ({ post_id, reply_to, close, level = 0 }: Props) => {
 
   return (
     <div
-      className={clsx('rounded-md border border-neutral-300 p-3', {
+      className={clsx('rounded-md border border-neutral-300', {
         'bg-neutral-100': level % 2 === 1,
         'bg-white': level % 2 === 0,
       })}
     >
       <PlateEditor
-        editorClassName="bg-transparent border-0 focus:!ring-0 focus-visible:!ring-0 focus:border-2 focus:border-neutral-300"
+        editorClassName="bg-transparent border-0 focus:!ring-0 focus-visible:!ring-0 focus-visible:!ring-offset-0 focus:border-2 focus:border-transparent"
         handleChange={handleChange}
         getEditor={(editor) => {
           editorRef.current = editor;
@@ -70,7 +70,7 @@ const CreateComment = ({ post_id, reply_to, close, level = 0 }: Props) => {
         placeholder="Comment goes here!"
         fixedToolbar={false}
       />
-      <div className="mt-2 flex gap-3 items-center justify-end">
+      <div className="mt-2 p-3 pt-0 flex gap-3 items-center justify-end">
         {close && (
           <button
             className="flex items-center btn btn-sm w-fit"

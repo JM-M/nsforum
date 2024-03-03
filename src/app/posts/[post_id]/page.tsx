@@ -20,10 +20,12 @@ const page = async ({ params: { post_id } }: Props) => {
     }));
   const comments = commentsResponse?.data;
 
+  console.log(post);
+
   return (
     <div>
       <PostContent post_id={post_id} post={post} />
-      <PostUpvotes />
+      <PostUpvotes post_id={post_id} />
       <PostComments
         post_id={post_id}
         comments={comments}

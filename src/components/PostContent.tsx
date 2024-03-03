@@ -7,12 +7,17 @@ import { marked } from 'marked';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 
 import { PostTag } from '@/types/post';
+import usePost from '@/hooks/usePost';
 
+import PostActions from './PostActions';
 import PostToc from './PostToc';
 
 type Props = { post_id: string; post: any };
-const PostContent = ({ post_id, post }: Props) => {
+const PostContent = ({ post_id, post: _post }: Props) => {
   const articleRef = useRef<HTMLElement | null>(null);
+
+  const { post } = usePost({ post_id, initialData: _post });
+  console.log(post);
 
   /** Will replace classic code <pre> support with a more advanced integration */
   const replacePreWithSyntaxHighlighter = (node: any) => {
@@ -42,6 +47,7 @@ const PostContent = ({ post_id, post }: Props) => {
     <div className="relative flex gap-3">
       <PostToc articleRef={articleRef} title={title} />
       <div className="prose text-foreground w-full max-w-screen-sm mx-auto">
+        <PostActions post_id={post_id} />
         <h1 className="font-serif text-foreground">{title}</h1>
         <article ref={articleRef}>{reactComponent}</article>
         {!!tags?.length && (
