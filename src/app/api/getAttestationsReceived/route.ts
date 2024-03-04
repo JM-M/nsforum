@@ -10,8 +10,6 @@ export async function POST(req: Request) {
 
   const body = await req.json();
 
-  console.log('API: ', body);
-
   try {
     const data = await composeClient.executeQuery(`
             query {

@@ -3,8 +3,10 @@
 import { useRef } from 'react';
 /** For Markdown support */
 import parse from 'html-react-parser';
-import { marked } from 'marked';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import remarkHtml from 'remark-html';
+import remarkParse from 'remark-parse';
+import { unified } from 'unified';
 
 import { PostTag } from '@/types/post';
 import usePost from '@/hooks/usePost';
@@ -17,7 +19,6 @@ const PostContent = ({ post_id, post: _post }: Props) => {
   const articleRef = useRef<HTMLElement | null>(null);
 
   const { post } = usePost({ post_id, initialData: _post });
-  console.log(post);
 
   /** Will replace classic code <pre> support with a more advanced integration */
   const replacePreWithSyntaxHighlighter = (node: any) => {
@@ -37,7 +38,13 @@ const PostContent = ({ post_id, post: _post }: Props) => {
 
   const title = post?.content?.title || '';
   const markdownContent = post?.content?.body || '';
-  const htmlContent = marked(markdownContent);
+
+  const file = unified()
+    .use(remarkParse)
+    .use(remarkHtml)
+    .processSync(markdownContent);
+  const htmlContent = String(file);
+
   const reactComponent = parse(htmlContent, {
     replace: replacePreWithSyntaxHighlighter,
   });

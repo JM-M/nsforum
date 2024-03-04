@@ -21,11 +21,17 @@ const PostToc = ({ articleRef, title }: Props) => {
     if (!articleElement) return;
     const elements = Array.from(
       articleElement.querySelectorAll('h2, h3, h4, h5, h6')
-    ).map((elem) => ({
-      id: elem.id,
-      text: (elem as HTMLElement).innerText,
-      level: Number(elem.nodeName.charAt(1)),
-    }));
+    ).map((elem, i) => {
+      const text = (elem as HTMLElement).innerText;
+      const id = `${text.substring(0, 10)}-${i}`.replaceAll(' ', '_');
+      elem.setAttribute('id', id);
+      return {
+        id,
+        text,
+        level: Number(elem.nodeName.charAt(1)),
+      };
+    });
+
     setHeadings(elements);
   }, [articleRef.current]);
 
@@ -54,24 +60,30 @@ const PostToc = ({ articleRef, title }: Props) => {
           <div className="text-sm text-muted-foreground">Feb 20, 2024</div>
         </div>
         <ul>
-          {headings.map((heading) => (
-            <li key={heading.id} className={getClassName(heading.level)}>
-              <a
-                href={`#${heading.id}`}
-                onClick={(e) => {
-                  e.preventDefault();
-                  document.querySelector(`#${heading.id}`)!.scrollIntoView({
-                    behavior: 'smooth',
-                  });
-                }}
-                className={clsx('block py-1', {
-                  'text-blue-500': heading.id === activeId,
-                })}
+          {headings.map((heading, i) => {
+            console.log(heading);
+            return (
+              <li
+                key={`${heading.id}-${i}`}
+                className={getClassName(heading.level)}
               >
-                {heading.text}
-              </a>
-            </li>
-          ))}
+                <a
+                  href={heading.id}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    document.querySelector(`#${heading.id}`)!.scrollIntoView({
+                      behavior: 'smooth',
+                    });
+                  }}
+                  className={clsx('block py-1', {
+                    'text-blue-500': heading.id === activeId,
+                  })}
+                >
+                  {heading.text}
+                </a>
+              </li>
+            );
+          })}
         </ul>
       </div>
     </aside>
