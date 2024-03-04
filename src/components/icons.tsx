@@ -176,6 +176,7 @@ export const Icons = {
   check: Check,
   chevronRight: ChevronRight,
   chevronsUpDown: ChevronsUpDown,
+  chevronDown: ChevronDown,
   clear: X,
   close: X,
   code: Code2,
