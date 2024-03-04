@@ -58,7 +58,7 @@ const PostTagsMultiSelect = ({ postTags, setPostTags }: Props) => {
   return (
     <div className="p-2 text-sm rounded-md border border-neutral-300">
       {!!postTags?.length && (
-        <ul className="flex gap-2 flex-flow mb-2">
+        <ul className="flex gap-2 flex-wrap mb-2">
           {postTags.map(({ slug, title }) => (
             <li
               key={slug}

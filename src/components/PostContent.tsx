@@ -51,7 +51,7 @@ const PostContent = ({ post_id, post: _post }: Props) => {
         <h1 className="font-serif text-foreground">{title}</h1>
         <article ref={articleRef}>{reactComponent}</article>
         {!!tags?.length && (
-          <div className="flex gap-2 flex-flow">
+          <div className="flex gap-2 flex-wrap">
             {tags.map((tag: PostTag) => {
               const { slug, title } = tag;
               return (

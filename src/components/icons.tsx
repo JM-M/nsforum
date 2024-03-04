@@ -12,6 +12,7 @@ import {
   ChevronRight,
   ChevronsUpDown,
   Code2,
+  Combine,
   Edit2,
   ExternalLink,
   Eye,
@@ -57,6 +58,7 @@ import {
   Trash,
   Twitter,
   Underline,
+  Ungroup,
   WrapText,
   X,
 } from 'lucide-react';
@@ -180,6 +182,7 @@ export const Icons = {
   codeblock: FileCode,
   color: Baseline,
   column: RectangleVertical,
+  combine: Combine,
   comment: MessageSquare,
   commentAdd: MessageSquarePlus,
   delete: Trash,
@@ -216,6 +219,7 @@ export const Icons = {
   trash: Trash,
   ul: List,
   underline: Underline,
+  ungroup: Ungroup,
   unlink: Link2Off,
   viewing: Eye,
 
